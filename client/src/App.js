@@ -4,16 +4,20 @@ import googleClientId from './config.js';
 import axios from 'axios';
 
 function App() {
-  const responseSuccessGoogle = (response) =>{         
-      axios({
-        method:"POST",
-        url:"http://localhost:8080/auth/googleLogin",
-        data:{tokenId:response.tokenId}
-      }).then(response => {
-          console.log(response);
-      }).catch(err =>{
-        console.log(err);
-      })   
+
+  const responseSuccessGoogle = (response) => {
+    console.log(response);
+    axios({
+      method: "POST",
+      url: "http://localhost:8080/auth/googleLogin",
+      data: {tokenId: response.tokenId}
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(err => {
+      console.log(err);
+    })
   }
   const responseErrorGoogle = (response) =>{
     
@@ -24,7 +28,7 @@ function App() {
     
       <GoogleLogin
         clientId={googleClientId}
-        buttonText="Login"
+        buttonText="Login with Google"
         onSuccess={responseSuccessGoogle}
         onFailure={responseErrorGoogle}
         cookiePolicy={'single_host_origin'}
