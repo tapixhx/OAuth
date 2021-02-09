@@ -3,10 +3,10 @@ import GoogleLogin from 'react-google-login';
 import googleClientId from './config.js';
 
 function App() {
-  const responseSuccessGoogle = (resposne) =>{
-
+  const responseSuccessGoogle = (response) =>{
+      console.log(response);
   }
-  const responseErrorGoogle = (resposne) =>{
+  const responseErrorGoogle = (response) =>{
     
   }
   return (
