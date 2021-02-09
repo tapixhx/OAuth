@@ -2,15 +2,22 @@ const { validationResult } = require('express-validator');
 const {OAuth2Client} = require('google-auth-library');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { response } = require('express');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
-exports.gLogin = (req, res, next) => {
+exports.gLogin = async (req, res, next) => {
     const {tokenId} = req.body;
-    client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID})
+    // console.log(req.body);
+    client.verifyIdToken({
+        idToken:tokenId,
+        audience:process.env.GOOGLE_CLIENT_ID
+    })
     .then(response => {
         const {email_verified, name, email} = response.getPayload;
-        console.log(response.payload);
+    })
+    .catch(err => {
+        console.log(err);
     })
     // const email = req.body.email;
     // const password = req.body.password;
