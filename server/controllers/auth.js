@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
-exports.gLogin = (req, res, next) => {
-    const {tokenId} = req.body;
+exports.gLogin = (req, res,next) => {
+    const {tokenId}=req.body;
     client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID})
     .then(response => {
         const {email_verified, name, email} = response.getPayload;
