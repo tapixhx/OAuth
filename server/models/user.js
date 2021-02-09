@@ -18,7 +18,7 @@ const userSchema = new schema({
         type:String,
         default: 'I am new',
     },
-    isVerified: {
+    email_verified: {
         type: Boolean,
         default: false
     },

@@ -13,7 +13,7 @@ function App() {
       data: {tokenId: response.tokenId}
     })
     .then(response => {
-      console.log(response);
+      console.log("Login successful!", response);
     })
     .catch(err => {
       console.log(err);
