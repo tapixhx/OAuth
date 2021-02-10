@@ -1,6 +1,6 @@
 const {OAuth2Client} = require('google-auth-library');
 const jwt = require('jsonwebtoken');
-
+const fetch = require('node-fetch');
 const User = require('../models/user');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
@@ -73,6 +73,73 @@ exports.gLogin = (req, res, next) => {
         }
     })
     .catch(err => {
+        console.log(err);
+    })
+}
+exports.fLogin = (req, res, next) => {
+    const {userID,accessToken}=req.body;
+    let urlGraphFacebook = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+    fetch(urlGraphFacebook,{
+        method:'GET'
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log(response);
+        const {email,name} =response;
+        User.findOne({email}).exec((err, user) => {
+            if(err) {
+                // console.log("Heloooooooooooooooooooooooo");
+                console.log(err);
+                return res.status(400).json({
+                    error: "Something went wrong!",
+                })
+            } else {
+                // console.log('HIiiiiiiiiiiiiiiiiiii');
+                if(user) {
+                    // console.log(user);
+                    const token = jwt.sign(
+                        {
+                            email: user.email,
+                            _Id: user._id.toString()
+                        },
+                        'privatekey',
+                        { expiresIn:'12h' }
+                    );
+                    const{_id, name, email} = user;
+                    res.json({
+                        token: token,
+                        user: {_id, name, email}
+                    })
+                } else {
+                    // console.log('whdcgaabkhnlanjf;ajf;afakpf');
+                    let password = email+'mypasswordsecretkey';
+                    const email_verified=true;
+                    let newUser = new User({name, email, password, email_verified});
+                    newUser.save((err, data) => {
+                        if(err) {
+                            console.log(err);
+                            return res.status(400).json({
+                                error: "Saving doesn't work!",
+                            })
+                        }
+                        const token = jwt.sign(
+                            {
+                                email: data.email,
+                                _Id: data._id.toString()
+                            },
+                            'privatekey',
+                            { expiresIn:'12h' }
+                        );
+                        const{_id, name, email} = newUser;
+                        res.json({
+                            token: token,
+                            user: {_id, name, email}
+                        })
+                    })
+                }
+            }
+        })
+    }).catch(err => {
         console.log(err);
     })
 }
