@@ -1,6 +1,5 @@
 import './App.css';
 import GoogleLogin from 'react-google-login';
-import googleClientId, { facebookAppId } from './config.js';
 import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 
@@ -43,15 +42,15 @@ function App() {
     <div className="App">
       <h1 className="text-center text-uppercase"> Hello! </h1>
       <GoogleLogin
-        clientId={googleClientId.googleClientId}
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
         buttonText="Login with Google"
         onSuccess={responseSuccessGoogle}
         onFailure={responseErrorGoogle}
         cookiePolicy={'single_host_origin'}
       />
       <FacebookLogin
-    appId={facebookAppId.facebookAppId}
-    autoLoad={false}
+    appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+    autoLoad={false} 
     callback={responseSuccessFacebook} />
     </div>
   );
